@@ -88,6 +88,9 @@ internal class InAppManager(
         dialog.onClose = { send("close", popup) }
         dialog.onSubmit = { email ->
             storage.subscribed = true
+            // A form submit IS the conversion for "stop after convert" (matches
+            // the web loader) — otherwise the popup reappears next session.
+            gate.recordConvert(popup.campaignId)
             send("submit", popup, email = email)
         }
         dialog.show()
