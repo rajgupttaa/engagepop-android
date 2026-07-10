@@ -61,6 +61,23 @@ class LogicTest {
     }
 
     @Test
+    fun audienceAttributeConditions() {
+        // "attr:<key>" matches the identify() store; a missing key is "".
+        val t = Targeting(
+            frequencyMode = "every", frequencyMax = 0, stopOnConvert = false, matchAll = true,
+            conditions = listOf(Targeting.Condition("attr:plan", "is", "pro")),
+        )
+        assertTrue(Audience.matches(t, RuleContext("mobile", null, false, mapOf("plan" to "pro"))))
+        assertFalse(Audience.matches(t, RuleContext("mobile", null, false, mapOf("plan" to "free"))))
+        assertFalse(Audience.matches(t, RuleContext("mobile", null, false)))
+        val tNot = Targeting(
+            frequencyMode = "every", frequencyMax = 0, stopOnConvert = false, matchAll = true,
+            conditions = listOf(Targeting.Condition("attr:plan", "is_not", "pro")),
+        )
+        assertTrue(Audience.matches(tNot, RuleContext("mobile", null, false)))
+    }
+
+    @Test
     fun audienceIgnoresUnsupportedFields() {
         val t = Targeting(
             frequencyMode = "every", frequencyMax = 0, stopOnConvert = false, matchAll = true,

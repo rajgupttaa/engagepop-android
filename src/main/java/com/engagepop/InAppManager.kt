@@ -56,7 +56,12 @@ internal class InAppManager(
     private fun ruleContext(): RuleContext {
         val isTablet = context.resources.configuration.screenLayout and
             Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_LARGE
-        return RuleContext(device = if (isTablet) "tablet" else "mobile", country = null, subscribed = storage.subscribed)
+        return RuleContext(
+            device = if (isTablet) "tablet" else "mobile",
+            country = null,
+            subscribed = storage.subscribed,
+            attributes = storage.attributes, // identify() store, for attr:<key> conditions
+        )
     }
 
     /** Native triggers: load (0), delay (seconds). Web-only triggers → 1s. */

@@ -37,7 +37,13 @@ internal data class Targeting(
 }
 
 /** Runtime facts a native app can supply for audience conditions. */
-internal data class RuleContext(val device: String, val country: String?, val subscribed: Boolean)
+internal data class RuleContext(
+    val device: String,
+    val country: String?,
+    val subscribed: Boolean,
+    /** The identify() attribute store, for "attr:<key>" conditions. */
+    val attributes: Map<String, String> = emptyMap(),
+)
 
 /**
  * Evaluates audience conditions. Fields a native app can't know (page/referrer/
@@ -51,10 +57,13 @@ internal object Audience {
     }
 
     private fun evaluate(c: Targeting.Condition, ctx: RuleContext): Boolean {
-        val actual = when (c.field) {
-            "device" -> ctx.device
-            "country" -> ctx.country ?: ""
-            "subscribed" -> if (ctx.subscribed) "yes" else "no"
+        val actual = when {
+            c.field == "device" -> ctx.device
+            c.field == "country" -> ctx.country ?: ""
+            c.field == "subscribed" -> if (ctx.subscribed) "yes" else "no"
+            // "attr:<key>" matches the identify() store (mirrors the web
+            // loader's visitorAttrs conditions).
+            c.field.startsWith("attr:") -> ctx.attributes[c.field.substring(5)] ?: ""
             else -> return true // unsupported field on native — don't block
         }.lowercase()
         val expect = c.value.lowercase()
