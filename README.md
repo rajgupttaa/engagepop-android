@@ -75,6 +75,19 @@ EngagePop.convert(value = 49.99, order = "1234", campaignId = 12)
 EngagePop.reset() // on logout
 ```
 
+### What identify() unlocks
+
+The attributes you set drive targeting across EngagePop:
+
+- **Push audience filters** — in the dashboard push composer, add an audience
+  filter like `plan is pro`: the notification only reaches devices whose
+  identify attributes match every filter.
+- **Popup "User attribute" conditions** *(SDK 0.2.4+)* — popup campaigns can
+  add an audience condition like `plan is pro`, evaluated on-device against the
+  same attributes. Older SDK versions skip the condition (the popup still
+  shows), so ship 0.2.4+ before gating exclusive content on it.
+- **`{{merge tags}}`** — popups substitute `{{name}}`, `{{plan}}`, etc.
+
 ## In-app popups
 
 Once configured, the SDK fetches your published **popup** campaigns and shows the
