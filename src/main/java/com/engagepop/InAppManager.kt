@@ -104,6 +104,6 @@ internal class InAppManager(
                 put("fields", JSONObject().put("email", it))
             }
         }
-        api.sendEvents(Requests.events(config, storage.lastPushToken, JSONArray().put(event)))
+        EngagePop.enqueueEvents(JSONArray().put(event))
     }
 }

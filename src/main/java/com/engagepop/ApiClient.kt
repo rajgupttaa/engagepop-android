@@ -94,11 +94,12 @@ internal object Requests {
         put("sdk_version", EngagePopInfo.SDK_VERSION)
     }
 
-    fun events(config: EngagePopConfig, token: String?, events: JSONArray): JSONObject =
+    fun events(config: EngagePopConfig, token: String?, visitorId: String?, events: JSONArray): JSONObject =
         JSONObject().apply {
             put("site_key", config.siteKey)
             put("app_key", config.appKey)
             if (token != null) put("token", token)
+            if (visitorId != null) put("visitor_id", visitorId)
             put("events", events)
         }
 }

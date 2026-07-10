@@ -13,10 +13,13 @@ data class EngagePopConfig @JvmOverloads constructor(
     val appKey: String,
     val apiBaseUrl: String = "https://edge.engagepop.com",
     val debugLogging: Boolean = false,
+    /** When true (default), an eligible in-app popup shows automatically after
+     *  configure. Set false to control placement via refreshInAppMessages(). */
+    val autoShowInAppMessages: Boolean = true,
 )
 
 internal object EngagePopInfo {
-    const val SDK_VERSION = "0.1.0"
+    const val SDK_VERSION = "0.2.1"
     const val PLATFORM = "android"
 }
 

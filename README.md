@@ -89,6 +89,36 @@ EngagePop.refreshInAppMessages()
 The native renderer covers the common blocks (heading, text, image, button,
 email capture, divider, spacer); richer blocks render on web today.
 
+To control where/when a popup appears, turn off auto-show and trigger it
+yourself:
+
+```kotlin
+EngagePop.configure(this, EngagePopConfig(siteKey = "ep_…", appKey = "epm_…",
+                                          autoShowInAppMessages = false))
+// …then, on a screen where a popup is OK:
+EngagePop.refreshInAppMessages()
+```
+
+## Notification inbox / bell
+
+The SDK keeps a local history so you can build an in-app inbox/bell:
+
+```kotlin
+val messages = EngagePop.inbox?.messages() ?: emptyList()   // newest first
+val unread   = EngagePop.inbox?.unreadCount() ?: 0
+
+EngagePop.inbox?.markRead(message.id)
+EngagePop.inbox?.markAllRead()
+EngagePop.inbox?.clear()
+
+// Refresh your badge when it changes:
+EngagePop.inbox?.onChanged = { /* reload your bell */ }
+```
+
+It captures foreground + data-message notifications automatically (the FCM
+service runs in your app process). Notifications delivered purely in the
+background as `notification` messages are captured when tapped.
+
 ## Publishing (maintainers)
 
 Developed inside the EngagePop monorepo under `sdks/android`, released to Maven
