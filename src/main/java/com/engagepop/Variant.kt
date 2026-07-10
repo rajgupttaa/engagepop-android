@@ -3,8 +3,9 @@ package com.engagepop
 import org.json.JSONObject
 import kotlin.math.abs
 
-/** One A/B variant parsed from `config.ab`. `config` null = inherit the base. */
-internal data class ABVariant(val key: String, val split: Int, val config: JSONObject?)
+/** One A/B variant parsed from `config.ab`. `config` null = inherit the base.
+ *  `holdout` = measured (exposure impression) but never rendered. */
+internal data class ABVariant(val key: String, val split: Int, val config: JSONObject?, val holdout: Boolean = false)
 
 /**
  * Deterministic variant bucketing — identical to the web loader's `pickVariant`
@@ -40,7 +41,7 @@ internal object VariantPicker {
             val v = arr.optJSONObject(i) ?: continue
             val key = v.optString("key").ifEmpty { continue }
             val cfg = v.optJSONObject("config")
-            out.add(ABVariant(key, v.optInt("split", 0), cfg))
+            out.add(ABVariant(key, v.optInt("split", 0), cfg, v.optBoolean("holdout", false)))
         }
         return if (out.size >= 2) out else emptyList()
     }

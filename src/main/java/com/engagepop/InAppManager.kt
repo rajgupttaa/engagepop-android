@@ -47,6 +47,15 @@ internal class InAppManager(
             if (!gate.allows(campaignId, targeting)) continue
             if (!Audience.matches(targeting, ruleContext())) continue
 
+            // Holdout arm: log the exposure at the moment the popup would have
+            // shown (mirrors web + iOS), count the "show" for frequency parity,
+            // and never render.
+            if (variant?.holdout == true) {
+                send("impression", popup)
+                gate.recordShow(campaignId)
+                return
+            }
+
             val delayMs = triggerDelayMs(c.optJSONArray("triggers"))
             main.postDelayed({ present(popup) }, delayMs)
             return // one popup per refresh
