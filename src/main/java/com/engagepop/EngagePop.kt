@@ -119,6 +119,13 @@ object EngagePop {
     fun handleRemoteMessage(context: Context, message: RemoteMessage) {
         val data = message.data
         val nid = data["nid"]?.toLongOrNull() ?: 0L
+        // Delivery receipt: the push reached this device (whether or not it's
+        // ever opened). Only fires when onMessageReceived runs — foreground, or
+        // data-only messages — pure notification-type messages delivered in the
+        // background bypass it, so Delivered on the dashboard undercounts those.
+        if (nid > 0) {
+            enqueueEvents(JSONArray().put(JSONObject().put("type", "push_delivered").put("nid", nid)))
+        }
         val title = message.notification?.title ?: data["title"] ?: return
         val body = message.notification?.body ?: data["body"] ?: ""
         inbox?.add(

@@ -119,6 +119,14 @@ It captures foreground + data-message notifications automatically (the FCM
 service runs in your app process). Notifications delivered purely in the
 background as `notification` messages are captured when tapped.
 
+## Delivery receipts
+
+When the FCM handler runs, the SDK also reports a **delivered** receipt so the
+dashboard can show the funnel Sent → Delivered → Opened. Same caveat as the
+inbox: it fires for foreground and data messages, but pure `notification`-type
+messages delivered in the background bypass `onMessageReceived`, so those only
+surface once tapped (as an Open). Treat Delivered as a lower bound on Android.
+
 ## Publishing (maintainers)
 
 Developed inside the EngagePop monorepo under `sdks/android`, released to Maven
