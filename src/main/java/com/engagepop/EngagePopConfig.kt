@@ -19,7 +19,7 @@ data class EngagePopConfig @JvmOverloads constructor(
 )
 
 internal object EngagePopInfo {
-    const val SDK_VERSION = "0.2.4"
+    const val SDK_VERSION = "0.2.5"
     const val PLATFORM = "android"
 }
 
